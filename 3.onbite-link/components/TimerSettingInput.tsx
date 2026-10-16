@@ -55,7 +55,7 @@ export default function TimerSettingInput() {
       <button
         type="submit"
         disabled={!isValid}
-        className="rounded-md border border-current px-4 py-2 disabled:opacity-40"
+        className="rounded-md bg-indigo-500 px-4 py-2 font-medium text-white shadow-sm transition-all duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 enabled:hover:-translate-y-0.5 enabled:hover:bg-indigo-600 enabled:hover:shadow-lg enabled:active:translate-y-0 enabled:active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
       >
         설정 완료
       </button>
