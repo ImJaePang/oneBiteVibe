@@ -45,15 +45,20 @@ input::placeholder {
   background: var(--hover-bg);
 }
 
-.folder-delete {
+.folder-action {
   opacity: 0;
   cursor: pointer;
   transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
 
-.folder-item:hover .folder-delete,
-.folder-delete:focus-visible {
+.folder-item:hover .folder-action,
+.folder-action:focus-visible {
   opacity: 1;
+}
+
+.folder-edit:hover {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent-hover);
 }
 
 .folder-delete:hover {
@@ -85,3 +90,5 @@ input::placeholder {
   border-color: var(--accent);
   outline: none;
 }
+
+/* folder actions */

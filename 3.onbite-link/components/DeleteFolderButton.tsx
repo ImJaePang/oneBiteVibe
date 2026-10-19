@@ -25,7 +25,7 @@ export default function DeleteFolderButton({ folder }: { folder: Folder }) {
         type="button"
         aria-label={`${folder.name} 폴더 삭제`}
         onClick={() => setOpen(true)}
-        className="folder-delete shrink-0 rounded-md p-1.5 text-[var(--text-sub)]"
+        className="folder-action folder-delete shrink-0 rounded-md p-1.5 text-[var(--text-sub)]"
       >
         <svg
           width="16"

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import DeleteFolderButton from "./DeleteFolderButton";
+import EditFolderButton from "./EditFolderButton";
 import { useFolders } from "./FolderProvider";
 
 export default function FolderList() {
@@ -20,7 +21,10 @@ export default function FolderList() {
           >
             📁 {folder.name}
           </Link>
-          <DeleteFolderButton folder={folder} />
+          <div className="flex shrink-0 items-center gap-0.5">
+            <EditFolderButton folder={folder} />
+            <DeleteFolderButton folder={folder} />
+          </div>
         </li>
       ))}
     </ul>
