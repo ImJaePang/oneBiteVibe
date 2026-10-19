@@ -2,7 +2,7 @@ export default function SaveButton() {
   return (
     <button
       type="button"
-      className="self-end rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-80"
+      className="btn-primary self-end rounded-md bg-[var(--accent)] px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-40"
     >
       저장
     </button>
