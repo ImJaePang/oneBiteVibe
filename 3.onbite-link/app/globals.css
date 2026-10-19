@@ -45,6 +45,30 @@ input::placeholder {
   background: var(--hover-bg);
 }
 
+.folder-delete {
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.folder-item:hover .folder-delete,
+.folder-delete:focus-visible {
+  opacity: 1;
+}
+
+.folder-delete:hover {
+  background: color-mix(in srgb, var(--error) 12%, transparent);
+  color: var(--error);
+}
+
+.btn-danger {
+  transition: opacity 0.15s ease;
+}
+
+.btn-danger:hover {
+  opacity: 0.85;
+}
+
 .btn-secondary:hover {
   background: var(--hover-bg);
 }
