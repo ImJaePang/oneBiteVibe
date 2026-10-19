@@ -1,6 +1,10 @@
-import { folders } from "@/lib/mockData";
+"use client";
+
+import { useFolders } from "./FolderProvider";
 
 export default function FolderSelect() {
+  const { folders } = useFolders();
+
   return (
     <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
       폴더

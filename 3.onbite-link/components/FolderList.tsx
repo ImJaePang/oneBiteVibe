@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
-import { folders } from "@/lib/mockData";
+import { useFolders } from "./FolderProvider";
 
 export default function FolderList() {
+  const { folders } = useFolders();
+
   return (
     <ul className="flex flex-col gap-1">
       {folders.map((folder) => (
