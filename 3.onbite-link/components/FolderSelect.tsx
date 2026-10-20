@@ -2,7 +2,12 @@
 
 import { useFolders } from "./FolderProvider";
 
-export default function FolderSelect() {
+type Props = {
+  value?: string;
+  onChange?: (value: string) => void;
+};
+
+export default function FolderSelect({ value, onChange }: Props) {
   const { folders } = useFolders();
 
   return (
@@ -10,7 +15,9 @@ export default function FolderSelect() {
       폴더
       <select
         name="folderId"
-        defaultValue=""
+        required
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
         className="field rounded-md border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-base font-normal text-[var(--text)]"
       >
         <option value="" disabled>

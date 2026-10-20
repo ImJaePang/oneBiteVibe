@@ -5,6 +5,7 @@ export type LinkItem = {
   url: string;
   description: string;
   folderId: string;
+  thumbnail?: string | null;
 };
 
 export const folders: Folder[] = [

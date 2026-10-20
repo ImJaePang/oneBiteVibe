@@ -1,4 +1,5 @@
 import type { LinkItem } from "@/lib/mockData";
+import LinkThumbnail from "./LinkThumbnail";
 
 export default function LinkCard({ link }: { link: LinkItem }) {
   return (
@@ -8,6 +9,7 @@ export default function LinkCard({ link }: { link: LinkItem }) {
       rel="noopener noreferrer"
       className="card-hover flex flex-col gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)] p-4"
     >
+      {link.thumbnail && <LinkThumbnail src={link.thumbnail} />}
       <h3 className="font-semibold text-[var(--text)]">{link.title}</h3>
       <p className="line-clamp-2 text-sm leading-snug text-[var(--text-sub)]">
         {link.description}
