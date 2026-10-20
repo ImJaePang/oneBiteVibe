@@ -6,6 +6,7 @@ import { links as initialLinks, type LinkItem } from "@/lib/mockData";
 type LinkContextValue = {
   links: LinkItem[];
   addLink: (link: Omit<LinkItem, "id">) => void;
+  removeLink: (id: string) => void;
 };
 
 const LinkContext = createContext<LinkContextValue | null>(null);
@@ -27,8 +28,12 @@ export default function LinkProvider({
     setLinks((prev) => [{ ...link, id: crypto.randomUUID() }, ...prev]);
   };
 
+  const removeLink = (id: string) => {
+    setLinks((prev) => prev.filter((link) => link.id !== id));
+  };
+
   return (
-    <LinkContext.Provider value={{ links, addLink }}>
+    <LinkContext.Provider value={{ links, addLink, removeLink }}>
       {children}
     </LinkContext.Provider>
   );

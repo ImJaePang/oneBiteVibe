@@ -52,6 +52,7 @@ input::placeholder {
 }
 
 .folder-item:hover .folder-action,
+.link-item:hover .folder-action,
 .folder-action:focus-visible {
   opacity: 1;
 }
