@@ -1,5 +1,6 @@
 import type { LinkItem } from "@/lib/mockData";
 import DeleteLinkButton from "./DeleteLinkButton";
+import EditLinkButton from "./EditLinkButton";
 import LinkThumbnail from "./LinkThumbnail";
 
 export default function LinkCard({ link }: { link: LinkItem }) {
@@ -19,6 +20,7 @@ export default function LinkCard({ link }: { link: LinkItem }) {
         </p>
         <span className="truncate text-[13px] text-[var(--text-sub)]">{link.url}</span>
       </a>
+      <EditLinkButton link={link} />
       <DeleteLinkButton link={link} />
     </div>
   );
