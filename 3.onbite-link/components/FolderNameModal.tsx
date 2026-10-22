@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Modal from "./Modal";
 
 type FolderNameModalProps = {
   title: string;
   initialName?: string;
-  onSubmit: (name: string) => void;
+  onSubmit: (name: string) => void | Promise<void>;
   onClose: () => void;
 };
 
@@ -17,13 +17,23 @@ export default function FolderNameModal({
   onClose,
 }: FolderNameModalProps) {
   const [name, setName] = useState(initialName);
+  const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
   const trimmed = name.trim();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!trimmed) return;
-    onSubmit(trimmed);
-    onClose();
+    if (!trimmed || submittingRef.current) return;
+    submittingRef.current = true;
+    setSubmitting(true);
+    try {
+      await onSubmit(trimmed);
+      onClose();
+    } catch (error) {
+      console.error(error);
+      submittingRef.current = false;
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -51,7 +61,7 @@ export default function FolderNameModal({
           </button>
           <button
             type="submit"
-            disabled={!trimmed}
+            disabled={!trimmed || submitting}
             className="btn-primary rounded-md bg-[var(--accent)] px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
             저장

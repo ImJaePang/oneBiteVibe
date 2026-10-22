@@ -1,11 +1,12 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { folders as initialFolders, type Folder } from "@/lib/mockData";
+import type { Folder } from "@/lib/mockData";
+import { createClient } from "@/utils/supabase/client";
 
 type FolderContextValue = {
   folders: Folder[];
-  addFolder: (name: string) => void;
+  addFolder: (name: string) => Promise<void>;
   removeFolder: (id: string) => void;
   renameFolder: (id: string, name: string) => void;
 };
@@ -19,14 +20,22 @@ export function useFolders() {
 }
 
 export default function FolderProvider({
+  initialFolders,
   children,
 }: {
+  initialFolders: Folder[];
   children: React.ReactNode;
 }) {
   const [folders, setFolders] = useState<Folder[]>(initialFolders);
 
-  const addFolder = (name: string) => {
-    setFolders((prev) => [...prev, { id: crypto.randomUUID(), name }]);
+  const addFolder = async (name: string) => {
+    const { data, error } = await createClient()
+      .from("folders")
+      .insert({ name })
+      .select("id, name")
+      .single();
+    if (error) throw error;
+    setFolders((prev) => [...prev, { id: String(data.id), name: data.name }]);
   };
 
   const removeFolder = (id: string) => {
