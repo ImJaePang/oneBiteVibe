@@ -12,7 +12,7 @@ type LinkContextValue = {
   updateLink: (
     id: string,
     patch: Pick<LinkItem, "folderId" | "title" | "description">,
-  ) => void;
+  ) => Promise<void>;
 };
 
 const LinkContext = createContext<LinkContextValue | null>(null);
@@ -52,10 +52,21 @@ export default function LinkProvider({
     setLinks((prev) => prev.filter((link) => link.id !== id));
   };
 
-  const updateLink = (
+  const updateLink = async (
     id: string,
     patch: Pick<LinkItem, "folderId" | "title" | "description">,
   ) => {
+    const { error } = await createClient()
+      .from("links")
+      .update({
+        folder_id: patch.folderId ? Number(patch.folderId) : null,
+        title: patch.title,
+        description: patch.description,
+      })
+      .eq("id", id)
+      .select("id")
+      .single();
+    if (error) throw error;
     setLinks((prev) =>
       prev.map((link) => (link.id === id ? { ...link, ...patch } : link)),
     );

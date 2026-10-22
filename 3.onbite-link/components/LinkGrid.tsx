@@ -3,11 +3,19 @@
 import LinkCard from "./LinkCard";
 import { useLinks } from "./LinkProvider";
 
-export default function LinkGrid({ folderId }: { folderId?: string }) {
+export default function LinkGrid({
+  folderId,
+  unfiled = false,
+}: {
+  folderId?: string;
+  unfiled?: boolean;
+}) {
   const { links } = useLinks();
-  const items = folderId
-    ? links.filter((link) => link.folderId === folderId)
-    : links;
+  const items = unfiled
+    ? links.filter((link) => !link.folderId)
+    : folderId
+      ? links.filter((link) => link.folderId === folderId)
+      : links;
 
   return (
     <section className="grid flex-1 grid-cols-1 content-start gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

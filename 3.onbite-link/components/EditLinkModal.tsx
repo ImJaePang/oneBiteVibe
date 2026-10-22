@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { LinkItem } from "@/lib/mockData";
 import FolderSelect from "./FolderSelect";
 import LinkDescriptionInput from "./LinkDescriptionInput";
@@ -19,17 +19,27 @@ export default function EditLinkModal({ link, onClose }: EditLinkModalProps) {
   const [folderId, setFolderId] = useState(link.folderId);
   const [title, setTitle] = useState(link.title);
   const [description, setDescription] = useState(link.description);
+  const [pending, setPending] = useState(false);
+  const submittingRef = useRef(false);
   const trimmedTitle = title.trim();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!trimmedTitle) return;
-    updateLink(link.id, {
-      folderId,
-      title: trimmedTitle,
-      description: description.trim(),
-    });
-    onClose();
+    if (!trimmedTitle || submittingRef.current) return;
+    submittingRef.current = true;
+    setPending(true);
+    try {
+      await updateLink(link.id, {
+        folderId,
+        title: trimmedTitle,
+        description: description.trim(),
+      });
+      onClose();
+    } catch (error) {
+      console.error(error);
+      submittingRef.current = false;
+      setPending(false);
+    }
   };
 
   return (
@@ -46,7 +56,7 @@ export default function EditLinkModal({ link, onClose }: EditLinkModalProps) {
           >
             취소
           </button>
-          <SaveButton />
+          <SaveButton pending={pending} />
         </div>
       </form>
     </Modal>
