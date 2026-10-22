@@ -23,8 +23,13 @@ export default function DeleteLinkButton({ link }: { link: LinkItem }) {
       {open && (
         <DeleteLinkModal
           link={link}
-          onConfirm={() => {
-            removeLink(link.id);
+          onConfirm={async () => {
+            try {
+              await removeLink(link.id);
+            } catch (error) {
+              console.error(error);
+              return;
+            }
             setOpen(false);
           }}
           onClose={() => setOpen(false)}
