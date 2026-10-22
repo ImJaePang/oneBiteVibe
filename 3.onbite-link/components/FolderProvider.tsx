@@ -8,7 +8,7 @@ type FolderContextValue = {
   folders: Folder[];
   addFolder: (name: string) => Promise<void>;
   removeFolder: (id: string) => void;
-  renameFolder: (id: string, name: string) => void;
+  renameFolder: (id: string, name: string) => Promise<void>;
 };
 
 const FolderContext = createContext<FolderContextValue | null>(null);
@@ -42,7 +42,14 @@ export default function FolderProvider({
     setFolders((prev) => prev.filter((folder) => folder.id !== id));
   };
 
-  const renameFolder = (id: string, name: string) => {
+  const renameFolder = async (id: string, name: string) => {
+    const { error } = await createClient()
+      .from("folders")
+      .update({ name })
+      .eq("id", id)
+      .select("id")
+      .single();
+    if (error) throw error;
     setFolders((prev) =>
       prev.map((folder) => (folder.id === id ? { ...folder, name } : folder)),
     );
