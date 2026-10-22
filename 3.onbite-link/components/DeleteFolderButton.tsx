@@ -12,8 +12,13 @@ export default function DeleteFolderButton({ folder }: { folder: Folder }) {
   const { removeFolder } = useFolders();
   const router = useRouter();
 
-  const handleConfirm = () => {
-    removeFolder(folder.id);
+  const handleConfirm = async () => {
+    try {
+      await removeFolder(folder.id);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
     setOpen(false);
     // 렌더링 중 usePathname() 을 쓰면 프리렌더링이 막혀서 이벤트 시점에 읽음
     // 삭제한 폴더를 보고 있었다면 전체 목록으로 이동
