@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import FolderSelect from "./FolderSelect";
 import LinkUrlInput from "./LinkUrlInput";
@@ -20,10 +20,13 @@ export default function NewLinkForm() {
   const [url, setUrl] = useState("");
   const [folderId, setFolderId] = useState("");
   const [pending, setPending] = useState(false);
+  const submittingRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setPending(true);
     setError(null);
 
@@ -32,7 +35,7 @@ export default function NewLinkForm() {
       const data: OpenGraphData & { error?: string } = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      addLink({
+      await addLink({
         url: data.url,
         title: data.title,
         description: data.description,
@@ -46,6 +49,7 @@ export default function NewLinkForm() {
           ? err.message
           : "링크 정보를 가져오지 못했습니다.",
       );
+      submittingRef.current = false;
       setPending(false);
     }
   };

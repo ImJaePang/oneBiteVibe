@@ -1,11 +1,13 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { links as initialLinks, type LinkItem } from "@/lib/mockData";
+import { toLinkItem } from "@/lib/linkRow";
+import type { LinkItem } from "@/lib/mockData";
+import { createClient } from "@/utils/supabase/client";
 
 type LinkContextValue = {
   links: LinkItem[];
-  addLink: (link: Omit<LinkItem, "id">) => void;
+  addLink: (link: Omit<LinkItem, "id">) => Promise<void>;
   removeLink: (id: string) => void;
   updateLink: (
     id: string,
@@ -22,14 +24,28 @@ export function useLinks() {
 }
 
 export default function LinkProvider({
+  initialLinks,
   children,
 }: {
+  initialLinks: LinkItem[];
   children: React.ReactNode;
 }) {
   const [links, setLinks] = useState<LinkItem[]>(initialLinks);
 
-  const addLink = (link: Omit<LinkItem, "id">) => {
-    setLinks((prev) => [{ ...link, id: crypto.randomUUID() }, ...prev]);
+  const addLink = async (link: Omit<LinkItem, "id">) => {
+    const { data, error } = await createClient()
+      .from("links")
+      .insert({
+        url: link.url,
+        title: link.title,
+        description: link.description,
+        thumbnail_url: link.thumbnail ?? null,
+        folder_id: Number(link.folderId),
+      })
+      .select("id, url, title, description, thumbnail_url, folder_id")
+      .single();
+    if (error) throw error;
+    setLinks((prev) => [toLinkItem(data), ...prev]);
   };
 
   const removeLink = (id: string) => {
