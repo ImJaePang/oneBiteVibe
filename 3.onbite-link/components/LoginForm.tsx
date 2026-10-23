@@ -1,0 +1,82 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
+import AuthField from "./AuthField";
+import Toast from "./Toast";
+
+const ERROR_MESSAGES: Record<string, string> = {
+  invalid_credentials: "이메일 또는 비밀번호가 올바르지 않습니다.",
+  email_not_confirmed: "이메일 인증이 완료되지 않았습니다. 메일함을 확인해주세요.",
+  validation_failed: "입력한 정보를 다시 확인해주세요.",
+  user_banned: "이용이 제한된 계정입니다.",
+  over_request_rate_limit: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
+};
+
+export default function LoginForm() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [pending, setPending] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  const canSubmit = email !== "" && password !== "" && !pending;
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!canSubmit) return;
+
+    setPending(true);
+    const { error } = await createClient().auth.signInWithPassword({ email, password });
+    if (error) {
+      setToast(
+        (error.code && ERROR_MESSAGES[error.code]) ||
+          "로그인에 실패했습니다. 잠시 후 다시 시도해주세요.",
+      );
+      setPending(false);
+      return;
+    }
+    router.push("/");
+    router.refresh();
+  }
+
+  return (
+    <>
+      {toast && <Toast message={toast} />}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <AuthField
+          label="이메일"
+          name="email"
+          type="email"
+          placeholder="email@example.com"
+          autoComplete="email"
+          value={email}
+          onChange={setEmail}
+        />
+        <AuthField
+          label="비밀번호"
+          name="password"
+          type="password"
+          placeholder="비밀번호"
+          autoComplete="current-password"
+          value={password}
+          onChange={setPassword}
+        />
+        <button
+          type="submit"
+          disabled={!canSubmit}
+          className="btn-primary mt-2 rounded-md bg-[var(--accent)] px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {pending ? "로그인 중..." : "로그인"}
+        </button>
+      </form>
+    </>
+  );
+}
