@@ -33,11 +33,14 @@ export default function SignupForm() {
   }, [toast]);
 
   const busy = pending || navigating;
-  const canSubmit = email !== "" && password !== "" && passwordConfirm !== "" && !busy;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canSubmit) return;
+    if (busy) return;
+    if (email === "" || password === "" || passwordConfirm === "") {
+      setToast("이메일과 비밀번호를 모두 입력해주세요.");
+      return;
+    }
     if (password !== passwordConfirm) {
       setToast("비밀번호가 일치하지 않습니다.");
       return;
@@ -102,7 +105,7 @@ export default function SignupForm() {
         />
         <button
           type="submit"
-          disabled={!canSubmit}
+          disabled={busy}
           className="btn-primary mt-2 rounded-md bg-[var(--accent)] px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
           {busy ? "가입 중..." : "회원가입"}

@@ -29,11 +29,14 @@ export default function LoginForm() {
   }, [toast]);
 
   const busy = pending || navigating;
-  const canSubmit = email !== "" && password !== "" && !busy;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canSubmit) return;
+    if (busy) return;
+    if (email === "" || password === "") {
+      setToast("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
 
     setPending(true);
     const { error } = await createClient().auth.signInWithPassword({ email, password });
@@ -79,7 +82,7 @@ export default function LoginForm() {
         />
         <button
           type="submit"
-          disabled={!canSubmit}
+          disabled={busy}
           className="btn-primary mt-2 rounded-md bg-[var(--accent)] px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
           {busy ? "로그인 중..." : "로그인"}

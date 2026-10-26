@@ -4,8 +4,8 @@ import { type NextRequest, NextResponse } from "next/server";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-// 로그인한 사용자만 접근 가능한 경로: 인덱스, 폴더별, 미분류, 새 링크 페이지
-const PROTECTED_PATHS = ["/folder", "/unfiled", "/new"];
+// 로그인한 사용자만 접근 가능한 경로: 인덱스, 폴더별, 미분류, 새 링크, 비밀번호 재설정(메일 링크로 세션을 얻은 뒤) 페이지
+const PROTECTED_PATHS = ["/folder", "/unfiled", "/new", "/reset-password"];
 
 const isProtectedPath = (pathname: string) =>
   pathname === "/" ||
