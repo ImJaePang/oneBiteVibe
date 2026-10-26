@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import AuthField from "./AuthField";
@@ -23,6 +23,7 @@ export default function SignupForm() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [pending, setPending] = useState(false);
+  const [navigating, startTransition] = useTransition();
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,7 +32,8 @@ export default function SignupForm() {
     return () => clearTimeout(timer);
   }, [toast]);
 
-  const canSubmit = email !== "" && password !== "" && passwordConfirm !== "" && !pending;
+  const busy = pending || navigating;
+  const canSubmit = email !== "" && password !== "" && passwordConfirm !== "" && !busy;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -56,8 +58,15 @@ export default function SignupForm() {
       setPending(false);
       return;
     }
-    router.push("/");
-    router.refresh();
+    // Next 가 이 페이지의 state 를 보존하므로, 다시 돌아왔을 때 이전 값이 남지 않게 초기화
+    setPending(false);
+    setEmail("");
+    setPassword("");
+    setPasswordConfirm("");
+    startTransition(() => {
+      router.push("/");
+      router.refresh();
+    });
   }
 
   return (
@@ -96,7 +105,7 @@ export default function SignupForm() {
           disabled={!canSubmit}
           className="btn-primary mt-2 rounded-md bg-[var(--accent)] px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {pending ? "가입 중..." : "회원가입"}
+          {busy ? "가입 중..." : "회원가입"}
         </button>
       </form>
     </>
