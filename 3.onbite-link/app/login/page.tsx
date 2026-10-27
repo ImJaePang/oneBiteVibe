@@ -1,7 +1,9 @@
 import AuthCard from "@/components/AuthCard";
 import LoginForm from "@/components/LoginForm";
 
-export default function LoginPage() {
+export default async function LoginPage({ searchParams }: PageProps<"/login">) {
+  const { error } = await searchParams;
+
   return (
     <AuthCard
       title="로그인"
@@ -10,7 +12,9 @@ export default function LoginPage() {
       altHref="/signup"
       extraLink={{ label: "비밀번호를 잊으셨나요?", href: "/forgot-password" }}
     >
-      <LoginForm />
+      <LoginForm
+        initialError={error ? "카카오 로그인에 실패했습니다. 다시 시도해주세요." : null}
+      />
     </AuthCard>
   );
 }

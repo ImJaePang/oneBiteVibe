@@ -14,13 +14,13 @@ const ERROR_MESSAGES: Record<string, string> = {
   over_request_rate_limit: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
 };
 
-export default function LoginForm() {
+export default function LoginForm({ initialError }: { initialError: string | null }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [navigating, startTransition] = useTransition();
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(initialError);
 
   useEffect(() => {
     if (!toast) return;
@@ -58,6 +58,20 @@ export default function LoginForm() {
     });
   }
 
+  async function handleKakaoLogin() {
+    if (busy) return;
+    setPending(true);
+    const { error } = await createClient().auth.signInWithOAuth({
+      provider: "kakao",
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=/` },
+    });
+    // 성공하면 카카오 인증 페이지로 이동하므로 실패한 경우에만 복구
+    if (error) {
+      setToast("카카오 로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      setPending(false);
+    }
+  }
+
   return (
     <>
       {toast && <Toast message={toast} />}
@@ -86,6 +100,23 @@ export default function LoginForm() {
           className="btn-primary mt-2 rounded-md bg-[var(--accent)] px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
           {busy ? "로그인 중..." : "로그인"}
+        </button>
+        <button
+          type="button"
+          onClick={handleKakaoLogin}
+          disabled={busy}
+          aria-label="카카오 로그인"
+          className="block w-full disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {/* 카카오 가이드에 따라 비율은 유지하고 가로만 폼 너비에 맞춤 */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/kakao_login_large_wide.png"
+            alt="카카오 로그인"
+            width={600}
+            height={90}
+            className="h-auto w-full"
+          />
         </button>
       </form>
     </>
