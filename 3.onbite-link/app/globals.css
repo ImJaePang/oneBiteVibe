@@ -45,6 +45,12 @@ input::placeholder {
   background: var(--hover-bg);
 }
 
+/* 현재 선택된 사이드바 항목 (폴더 항목은 li 전체에 음영) */
+.nav-hover[aria-current="page"],
+.nav-hover:has([aria-current="page"]) {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
 .folder-action {
   opacity: 0;
   cursor: pointer;
