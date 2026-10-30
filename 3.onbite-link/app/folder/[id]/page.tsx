@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import AppShell from "@/components/AppShell";
 import LinkGrid from "@/components/LinkGrid";
 import { pageMetadata } from "@/lib/pageMetadata";
@@ -12,6 +13,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const supabase = createClient(await cookies());
+  // supabase 가 세션 만료 비교에 Date.now() 를 쓰므로, 요청 시점으로 확실히 미룸
+  await connection();
   // RLS 로 본인 폴더만 조회됨. 없거나 비로그인이면 기본 제목 사용
   const { data: folder } = await supabase
     .from("folders")
