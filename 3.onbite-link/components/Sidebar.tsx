@@ -1,3 +1,4 @@
+import Link from "next/link";
 import FolderList from "./FolderList";
 import LogoutButton from "./LogoutButton";
 import NavLink from "./NavLink";
@@ -17,7 +18,15 @@ export default function Sidebar() {
         </NavLink>
       </nav>
       <FolderList />
-      <LogoutButton className={`${navClassName} mt-auto disabled:opacity-40`} />
+      <div className="mt-auto flex flex-col gap-1">
+        <LogoutButton className={`${navClassName} disabled:opacity-40`} />
+        <Link
+          href="/privacy"
+          className="nav-hover block w-full rounded-md px-3 py-2 text-left text-xs text-gray-500"
+        >
+          개인정보 처리방침
+        </Link>
+      </div>
     </aside>
   );
 }

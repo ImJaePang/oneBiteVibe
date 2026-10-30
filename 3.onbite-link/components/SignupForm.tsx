@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import AuthField from "./AuthField";
@@ -103,6 +104,13 @@ export default function SignupForm() {
           value={passwordConfirm}
           onChange={setPasswordConfirm}
         />
+        <p className="text-xs text-[var(--text-sub)]">
+          가입하면{" "}
+          <Link href="/privacy" className="link-hover underline">
+            개인정보 처리방침
+          </Link>
+          에 동의한 것으로 간주합니다.
+        </p>
         <button
           type="submit"
           disabled={busy}
