@@ -18,9 +18,34 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
+// 파비콘은 app/favicon.ico 파일 컨벤션으로 자동 등록됨
 export const metadata: Metadata = {
-  title: "한입 링크",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "한입 링크",
+    template: "%s | 한입 링크",
+  },
   description: "북마크 서비스",
+  openGraph: {
+    type: "website",
+    siteName: "한입 링크",
+    title: "한입 링크",
+    description: "북마크 서비스",
+    locale: "ko_KR",
+    images: [{ url: "/thumbnail.png", width: 2400, height: 1260, alt: "한입 링크" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "한입 링크",
+    description: "북마크 서비스",
+    images: ["/thumbnail.png"],
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

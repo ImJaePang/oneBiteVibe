@@ -1,5 +1,8 @@
 import AuthCard from "@/components/AuthCard";
 import ForgotPasswordForm from "@/components/ForgotPasswordForm";
+import { pageMetadata } from "@/lib/pageMetadata";
+
+export const metadata = pageMetadata("비밀번호 찾기", "비밀번호 재설정 링크를 이메일로 받아보세요.");
 
 export default async function ForgotPasswordPage({
   searchParams,

@@ -1,5 +1,8 @@
 import AuthCard from "@/components/AuthCard";
 import LoginForm from "@/components/LoginForm";
+import { pageMetadata } from "@/lib/pageMetadata";
+
+export const metadata = pageMetadata("로그인", "한입 링크에 로그인하세요.");
 
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const { error } = await searchParams;
